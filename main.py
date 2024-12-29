@@ -1,7 +1,7 @@
 import telebot
 import threading
 import time
-from camera import setup_camera, capture_image
+from camera import setup_camera, take_photo
 from bme_280 import read_sensor_data, log_data_in_db, initialize_csv
 from conf import LOGS_DIR, TIME_FOR_SEND_DATA, TIME_FOR_SEND_LOGS
 from logger import logger
@@ -26,9 +26,7 @@ def send_updates():
     while True:
         if subscribers:
             temperature, humidity, pressure = read_sensor_data()
-            photo_filename = capture_image(camera)
-
-            # TODO: BUG! не сохраняет файлы фоток в папку, но пишет что сохраняет
+            photo_filename = take_photo(camera)
 
             logger.debug(f"Фотография сохранена во время вызова функции send_updates")
 
@@ -105,7 +103,6 @@ def main():
     logger.info("Потоки запущенны, бот запущен")
     bot.infinity_polling()  # Запуск бота
     logger.critical("Потоки остановлены, бот остановлен")
-
 
 if __name__ == "__main__":
     main()
