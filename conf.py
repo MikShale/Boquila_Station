@@ -1,7 +1,9 @@
-PHOTO_PATH = "/opt/photo.jpg"
+PHOTOS_DIR =  "/opt/boquilaStation/photos"
+LOGS_DIR = "/opt/boquilaStation/logs"
 MEASUREMENT_INTERVAL = 1800
 BME280_I2C_ADDRESS = 0x76
-BME280_I2C_BUS = 1
-BME280_SDA_PIN = 2
-BME280_SCL_PIN = 3
-USER_CHAT_IDs = []
+BME280_CSV_DATA = "bme280_data.csv"
+PHOTO_SIZE = (1920, 1080)
+TIME_FOR_SEND_DATA = 60 #в секундах
+TIME_FOR_SEND_LOGS = 120 #в секундах
+TIME_FOR_LOG_IN_DB = 30

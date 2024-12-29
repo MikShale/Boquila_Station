@@ -1,15 +1,58 @@
-import smbus2
-from Adafruit_BME280 import BME280
-from conf import BME280_I2C_ADDRESS, BME280_I2C_BUS
+import board
+import time
+import adafruit_bme280.advanced as adafruit_bme280
+import csv
+from datetime import datetime
+from conf import BME280_CSV_DATA, TIME_FOR_LOG_IN_DB
+from logger import logger
 
-class BME280Sensor:
-    def __init__(self):
-        self.bus = smbus2.SMBus(BME280_I2C_BUS)
-        self.bme280 = BME280(i2c_dev=self.bus, address=BME280_I2C_ADDRESS)
+i2c = board.I2C()
+bme280 = adafruit_bme280.Adafruit_BME280_I2C(i2c, address=0x76)
 
-    def get_data(self):
-        # Получаем данные с датчика
-        temperature = self.bme280.get_temperature()
-        humidity = self.bme280.get_humidity()
-        pressure = self.bme280.get_pressure()
+# TODO: Сделать API запрос текущего давления на уровне моря
+bme280.sea_level_pressure = 1013.25  # в гПа
+bme280.mode = adafruit_bme280.MODE_NORMAL
+
+# TODO: Надо сделать через MODE_SLEEP, чтобы датчик просыпался каждый раз при запросе
+bme280.standby_period = adafruit_bme280.STANDBY_TC_1000
+
+# Максимальная степепень сглаживания и максимальная передискретизация = максимальная точность
+bme280.iir_filter = adafruit_bme280.IIR_FILTER_X16
+bme280.overscan_pressure = adafruit_bme280.OVERSCAN_X16
+bme280.overscan_humidity = adafruit_bme280.OVERSCAN_X16
+bme280.overscan_temperature = adafruit_bme280.OVERSCAN_X16
+
+
+def initialize_csv():
+    if not BME280_CSV_DATA:
+        with open(BME280_CSV_DATA, mode="w", newline="") as file:
+            writer = csv.writer(file)
+            writer.writerow(["Timestamp", "Temperature (C)", "Humidity (%)", "Pressure (hPa)"])
+
+def write_to_csv(temperature, humidity, pressure):
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    with open(BME280_CSV_DATA, mode="a", newline="") as file:
+        writer = csv.writer(file)
+        writer.writerow([timestamp, temperature, humidity, pressure])
+
+def read_sensor_data():
+    try:
+        temperature = round(bme280.temperature, 1)
+        humidity = round(bme280.relative_humidity, 1)
+        pressure = round(bme280.pressure, 1)
+
         return temperature, humidity, pressure
+
+    except Exception as e:
+        logger.error(f"Fail to read sensor data: {e}")
+        return None
+
+def log_data_in_db():
+    while True:
+        temperature, humidity, pressure = read_sensor_data()
+        write_to_csv(temperature, humidity, pressure)
+        logger.info(
+            f" Записанно в БД: Temperature: {temperature}°C, Humidity: {humidity}%, Pressure: {pressure} hPa"
+        )
+        time.sleep(TIME_FOR_LOG_IN_DB)
+

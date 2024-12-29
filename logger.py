@@ -1,6 +1,10 @@
 import logging
+import os.path
+from conf import LOGS_DIR
 import colorlog
 
+if not os.path.exists(LOGS_DIR):
+    os.makedirs(LOGS_DIR)
 
 logger = logging.getLogger(__name__)
 
@@ -22,9 +26,12 @@ logger.setLevel(logging.DEBUG)
 #консольный обработчик
 console = logging.StreamHandler()
 console.setFormatter(formatter)
-logger.addHandler(console)
+
 
 #файловый обработчик
-file_handler = logging.FileHandler("logs.log", mode="w")
+file_handler = logging.FileHandler(os.path.join(LOGS_DIR, "logs.log"), mode="a")
 file_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s: %(message)s'))
-logger.addHandler(file_handler)
+
+if not logger.hasHandlers():
+    logger.addHandler(console)
+    logger.addHandler(file_handler)

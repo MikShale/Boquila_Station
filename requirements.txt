@@ -1,0 +1,5 @@
+colorlog~=6.9.0
+pyTelegramBotAPI~=4.25.0
+board~=1.0
+wheel~=0.45.1
+picamera2~=0.3.23
