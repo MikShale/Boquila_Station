@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData" autoUpload="Always" serverName="bioart@192.168.31.169:22 password" uploadOnCheckin="6132d313-2064-4a78-ad4b-df8cde67ebf4" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
+    <option name="confirmBeforeUploading" value="false" />
+    <serverData>
+      <paths name="bioart@192.168.31.169:22 password">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/opt/boquilaStation" local="$PROJECT_DIR$" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myUploadOnCheckinName" value="bioart@192.168.31.169:22 password" />
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
+</project>
