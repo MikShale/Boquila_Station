@@ -26,7 +26,7 @@ def send_updates():
             temperature, humidity, pressure = read_sensor_data()
             photo_filename = camera.capture_image()
 
-            # TODO: не сохраняет файлы фоток в папку, но пишет что сохраняет
+            # TODO: BUG! не сохраняет файлы фоток в папку, но пишет что сохраняет
 
             logger.debug(f"Фотография сохранена во время вызова функции send_updates")
 

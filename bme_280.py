@@ -40,6 +40,7 @@ def read_sensor_data():
         temperature = round(bme280.temperature, 1)
         humidity = round(bme280.relative_humidity, 1)
         pressure = round(bme280.pressure, 1)
+        #TODO: перевести гектопаскали в мм рт ст (mmHg = 3 * hPa / 4)
 
         return temperature, humidity, pressure
 

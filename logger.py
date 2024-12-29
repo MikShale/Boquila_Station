@@ -6,6 +6,8 @@ import colorlog
 if not os.path.exists(LOGS_DIR):
     os.makedirs(LOGS_DIR)
 
+#TODO: добавить вывод основных логов в systemd
+
 logger = logging.getLogger(__name__)
 
 formatter = colorlog.ColoredFormatter(
