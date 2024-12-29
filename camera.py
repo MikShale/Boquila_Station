@@ -37,4 +37,4 @@ def capture_image(cam):
         logger.error(f"Fail when capture image {e}")
 
 
-capture_image(setup_camera())
+#capture_image(setup_camera())

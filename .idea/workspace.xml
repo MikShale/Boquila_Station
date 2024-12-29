@@ -6,13 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="6bbee413-a00e-43a3-b4a0-db4c5635d7f1" name="Changes" comment="init: init commit">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bme_280.py" beforeDir="false" afterPath="$PROJECT_DIR$/bme_280.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/camera.py" beforeDir="false" afterPath="$PROJECT_DIR$/camera.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/conf.py" beforeDir="false" afterPath="$PROJECT_DIR$/conf.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/logger.py" beforeDir="false" afterPath="$PROJECT_DIR$/logger.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tg_bot.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -118,7 +112,7 @@
       <workItem from="1735412463771" duration="3733000" />
       <workItem from="1735421049840" duration="56000" />
       <workItem from="1735421687318" duration="33537000" />
-      <workItem from="1735491401415" duration="3160000" />
+      <workItem from="1735491401415" duration="3862000" />
     </task>
     <task id="LOCAL-00001" summary="init: init commit">
       <option name="closed" value="true" />
