@@ -13,6 +13,7 @@ def setup_camera():
         cam.configure(config)  # Применяем конфигурацию к камере
         cam.start()
         return cam
+
     except Exception as e:
         logger.error(f"Fail when setup camera {e}")
 

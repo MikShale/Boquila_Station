@@ -1,8 +1,8 @@
 import telebot
 import threading
 import time
-from camera import setup_camera
-from bme_280 import read_sensor_data, log_data_in_db
+from camera import setup_camera, capture_image
+from bme_280 import read_sensor_data, log_data_in_db, initialize_csv
 from conf import LOGS_DIR, TIME_FOR_SEND_DATA, TIME_FOR_SEND_LOGS
 from logger import logger
 from TOKEN import TOKEN
@@ -11,11 +11,13 @@ import os
 bot = telebot.TeleBot(TOKEN)
 
 # TODO: Может быть переписать как dict {user_id: [username, is_described, is_in_log]} ?
+# TODO: Перенести либо в фаил на рабочем столе либо развернуть БД. Иначе пользователям придется перерегистрироваться
 # Сейчас хранится как subscribers[user_id] = username
 subscribers = {}
 log_viewers = {}
 
 camera = setup_camera()
+initialize_csv()
 
 def send_updates():
     """
@@ -24,7 +26,7 @@ def send_updates():
     while True:
         if subscribers:
             temperature, humidity, pressure = read_sensor_data()
-            photo_filename = camera.capture_image()
+            photo_filename = capture_image(camera)
 
             # TODO: BUG! не сохраняет файлы фоток в папку, но пишет что сохраняет
 
@@ -44,6 +46,8 @@ def send_updates():
         time.sleep(TIME_FOR_SEND_DATA)
 
 def send_logs():
+    """Проверяет на наличие новых строк в файде logs.log и если да - отправляет их в сообщении"""
+
     last_logs = ""
     while True:
         try:

@@ -52,7 +52,7 @@ def log_data_in_db():
     while True:
         temperature, humidity, pressure = read_sensor_data()
         write_to_csv(temperature, humidity, pressure)
-        logger.info(
+        logger.debug(
             f" Записанно в БД: Temperature: {temperature}°C, Humidity: {humidity}%, Pressure: {pressure} hPa"
         )
         time.sleep(TIME_FOR_LOG_IN_DB)
