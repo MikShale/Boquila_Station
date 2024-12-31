@@ -3,7 +3,7 @@ import threading
 import time
 from camera import setup_camera, take_photo
 from bme_280 import read_sensor_data, log_data_in_db, initialize_csv
-from conf import LOGS_DIR, TIME_FOR_SEND_DATA, TIME_FOR_SEND_LOGS
+from CONST import LOGS_DIR, TIME_FOR_SEND_DATA, TIME_FOR_SEND_LOGS
 from logger import logger
 from TOKEN import TOKEN
 import os
@@ -11,13 +11,13 @@ import os
 bot = telebot.TeleBot(TOKEN)
 
 # TODO: Может быть переписать как dict {user_id: [username, is_described, is_in_log]} ?
-# TODO: Перенести либо в фаил на рабочем столе либо развернуть БД. Иначе пользователям придется перерегистрироваться
+# TODO: Перенести либо в файл на рабочем столе либо развернуть БД. Иначе пользователям придется перерегистрироваться
 # Сейчас хранится как subscribers[user_id] = username
 subscribers = {}
 log_viewers = {}
 
+# TODO: INFO: а почему оно тут?
 camera = setup_camera()
-initialize_csv()
 
 def send_updates():
     """
@@ -27,24 +27,22 @@ def send_updates():
         if subscribers:
             temperature, humidity, pressure = read_sensor_data()
             photo_filename = take_photo(camera)
-
-            logger.debug(f"Фотография сохранена во время вызова функции send_updates")
-
-            for user_id in list(subscribers):
-                try:
-                    bot.send_photo(
-                        user_id, photo_filename,
-                        f"🌡 Температура: {temperature}°C\n"
-                        f"💧 Влажность: {humidity}%\n"
-                        f"📈 Давление: {pressure} hPa\n",
-                    )
-                    logger.info(f"Информация отправлена подписчикам")
-                except Exception as e:
-                    logger.error(f"Ошибка при отправке данных пользователю {subscribers.get(user_id)}: {e}")
+            with open(photo_filename, "rb") as photo:
+                for user_id in list(subscribers):
+                    try:
+                        bot.send_photo(
+                            user_id, photo,
+                            f"🌡 Температура: {temperature}°C\n"
+                            f"💧 Влажность: {humidity}%\n"
+                            f"📈 Давление: {pressure} mmHg\n",
+                        )
+                        logger.info(f"Информация отправлена подписчикам")
+                    except Exception as e:
+                        logger.error(f"Ошибка при отправке данных пользователю {subscribers.get(user_id)}: {e}")
         time.sleep(TIME_FOR_SEND_DATA)
 
 def send_logs():
-    """Проверяет на наличие новых строк в файде logs.log и если да - отправляет их в сообщении"""
+    """Проверяет на наличие новых строк в файле logs.log и если да - отправляет их в сообщении"""
 
     last_logs = ""
     while True:
@@ -71,7 +69,7 @@ def handle_start(message):
         bot.send_message(user_id, "✅ Вы подписаны на обновления.")
         logger.info(f"Пользователь {username} подписался на обновления")
     else:
-        bot.reply_to(message, "Вы уже подписаны на обновления.")
+        bot.send_message(user_id, "Вы уже подписаны на обновления.")
 
 @bot.message_handler(commands=["stop"])
 def handle_stop(message):
@@ -97,6 +95,7 @@ def handle_logs(message):
 
 
 def main():
+    initialize_csv()
     threading.Thread(target=log_data_in_db, daemon=True).start()  # Логирование в CSV
     threading.Thread(target=send_updates, daemon=True).start()    # Отправка обновлений
     threading.Thread(target=send_logs, daemon=True).start()       # Отправка логов
